@@ -1,0 +1,17 @@
+{
+	"name" : "onu/gitblog",
+	"description" : "Its a new blog system like Git concept.",
+	"type" : "library",
+	"license" : "MIT",
+	"authors" : [{
+			"name" : "onucsecu2",
+			"email" : "onucsecu@gmail.com"
+		}
+	],
+	"minimum-stability" : "dev",
+	"autoload" : {
+		"psr-4" : {
+			"Onu\\Gitblog\\" : "src/"
+		}
+	}
+}
