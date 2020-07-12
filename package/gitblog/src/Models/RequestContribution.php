@@ -4,7 +4,7 @@ namespace Onu\Gitblog\Models;
 
 use App\User;
 use Illuminate\Database\Eloquent\Model;
-use Onu\Gitblog\Models\Post;
+
 
 class RequestContribution extends Model
 {

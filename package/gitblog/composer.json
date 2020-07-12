@@ -8,10 +8,24 @@
 			"email" : "onucsecu@gmail.com"
 		}
 	],
+    "require" : {
+        "tymon/jwt-auth": "^1.0"   
+    },
 	"minimum-stability" : "dev",
 	"autoload" : {
 		"psr-4" : {
 			"Onu\\Gitblog\\" : "src/"
 		}
-	}
+	},
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Tymon\\JWTAuth\\Providers\\LaravelServiceProvider"
+            ],
+            "aliases": {
+                "JWTAuth":"Tymon\\JWTAuth\\Facades\\JWTAuth",
+                "JWTFactory":"Tymon\\JWTAuth\\Facades\\JWTFactory"
+            }
+        }
+    }
 }

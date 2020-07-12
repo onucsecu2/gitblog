@@ -3,10 +3,9 @@ namespace Onu\Gitblog\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\URL;
+
 use Onu\Gitblog\Models\Post;
 
-use Illuminate\Support\Facades\DB;
 use Onu\Gitblog\Models\RequestContribution;
 
 
