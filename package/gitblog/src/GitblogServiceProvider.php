@@ -1,6 +1,5 @@
 <?php 
 namespace  Onu\Gitblog;
-use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
 class GitBlogServiceProvider extends ServiceProvider
 {

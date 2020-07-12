@@ -19,7 +19,7 @@ class GitblogPostsController extends Controller
         ]);
         return redirect('/home');
     }
-    public function create() {
+    public function createStory() {
         return view('Gitblog::create');
     }
     
