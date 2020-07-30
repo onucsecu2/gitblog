@@ -4,13 +4,6 @@
 	<meta name="csrf-token" content="{{ csrf_token() }}" />
 	<script src="https://kit.fontawesome.com/0466296eb5.js" crossorigin="anonymous"></script>
 
-    <script>
-	$.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-    });
-    </script>
 	<!-- Required meta tags -->
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -19,7 +12,7 @@
 	<title>Blog</title>
 </head>
 <body>
-	<center><h1>GitBlog</h1></center>
+	<div style="text-align: center;"><h1>GitBlog</h1></div>
 	<div class="container">
 	@foreach($posts as $post)
 
@@ -32,26 +25,12 @@
                 <div class="card-body">
                     <h5 class="card-title">{{$post->title}}</h5>
                     <p class="card-text">{!!Str::limit($post->body, 450)!!}</p>
-                    <p class="card-text"><small class="text-muted">Author: {!!$post->user->name!!}</small></p> 
+                    <p class="card-text"><small class="text-muted">Author: {!!$post->user->name!!}</small></p>
                     <a href="{{'/post/details/'.$post->slug}}" class="stretched-link"></a>
-                    <span class="text-muted">
-                    <small><i class="fas fa-thumbs-up">&nbsp;754</i>&nbsp;&nbsp;
-                    
-                    <i class="fas fa-eye">&nbsp;7.5k</i>
-                    </small>
-                    </span>
-                    <span class="text-muted float-right">
-                    <small>
-                    <i class="fas fa-code-branch">&nbsp;3</i>&nbsp;
-                    
-                    <i class="fas fa-user-edit">&nbsp;16</i>
-                   </small>
-                   </span>
-                    
                 </div>
     		</div>
   		</div>
-	</div>			
+	</div>
 				<!--button type="button" class="btn btn-dark" onclick="location.href='{{ url('/pull/'.$post->id) }}'" >Pull</button-->
 				<!--button type="button" class="btn btn-warning">Edit</button-->
 			@endforeach

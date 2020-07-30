@@ -9,9 +9,12 @@ use Illuminate\Database\Eloquent\Model;
 class Post extends Model
 {
     protected $fillable = [
-        'userId','title','slug', 'body',
+        'user_id','title','slug', 'body',
     ];
     public function user() {
-        return $this->belongsTo(User::class,'userId','id');
+        return $this->belongsTo(User::class,'user_id','id');
+    }
+    public function primaryContributions(){
+        return $this->hasMany(PrimaryContribution::class,'post_id','id');
     }
 }

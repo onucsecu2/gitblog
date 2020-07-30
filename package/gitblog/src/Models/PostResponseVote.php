@@ -7,12 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 class PostResponseVote extends Model
 {
     protected $fillable = [
-        'postId','userId','start', 'end','vote'
+        'post_id','user_id','start', 'end','vote'
     ];
     public function user() {
-        return $this->belongsTo(User::class,'userId','id');
+        return $this->belongsTo(User::class,'user_id','id');
     }
     public function post() {
-        return $this->belongsTo(Post::class,'postId','id');
+        return $this->belongsTo(Post::class,'post_id','id');
     }
 }

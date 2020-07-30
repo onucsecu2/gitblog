@@ -15,12 +15,12 @@ class CreatePostViewsTable extends Migration
     {
         Schema::create('post_views', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('postId')->unsigned();
+            $table->bigInteger('post_id')->unsigned();
             $table->integer('views');
             $table->timestamps();
         });
        Schema::table('post_views', function(Blueprint $table){
-                $table->foreign('postId')->references('id')->on('posts')->onDelete('cascade')->onUpdate('cascade');
+                $table->foreign('post_id')->references('id')->on('posts')->onDelete('cascade')->onUpdate('cascade');
        });
     }
 

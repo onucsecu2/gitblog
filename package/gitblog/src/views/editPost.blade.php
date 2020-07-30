@@ -18,12 +18,15 @@
             height: auto;
             display: inline-block;
         }
+        s {
+            color: #DC143C;
+        }
     </style>
 
 </head>
 <body>
 
-<div style="text-align: center;"><h1>GitBlog</h1></div>
+<div style="text-align: center;"><h1>Edit GitBlog-Responses</h1></div>
 <div class="row">
     <div class="col-md-8">
         <div class="card mb-3">
@@ -41,33 +44,30 @@
         </div>
     </div>
     <div  class="col-md-4">
+        <div class="card mb-3">
+            <div class="row no-gutters">
+                <div class="col-md-12">
+                    <div class="card-body">
+                        <h5 class="card-title">Responses</h5>
+                        <div id="responses">
+                            <div id="reponse" class="list-group">
+                            </div>
+                        </div>
 
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 <!-- Optional JavaScript -->
 <script type="text/javascript">
-    var post_id ={{$post->id}};
-
-    // 		console.log(post_id);
-    function getSelectionText() {
-        var text = "";
-        if (window.getSelection) {
-            text = window.getSelection().toString();
-        } else if (document.selection && document.selection.type != "Control") {
-            text = document.selection.createRange().text;
-        }
-        // console.log(text);
-        return text;
-    }
-
-    var pageX;
-    var pageY;
-    var st, en;
-    var selectedText;
 
 </script>
 <script type="text/javascript">
-
+    function showSuggests(x) {
+        alert(x);
+    }
     $(document).ready(function () {
         $.ajax({
             url: 'http://127.0.0.1:8000/api/get/info/{{$post->id}}',
@@ -77,27 +77,28 @@
                 'Authorization': 'Bearer {{$token}}'
             },
             success: function (result) {
-                let html = $('#story').html();
-                for(let i=0;i<result['edit_lists'].length;i++) {
-                    let si = result['edit_lists'][i]['start'];
-                    let ei = result['edit_lists'][i]['end'];
-                    let bdy = result['edit_lists'][i]['body'];
-                    
-                    html = html.substring(0, si+(7*i)) + "<s>" + html.substring(si+(7*i));
-                    html = html.substring(0, ei + 3+(7*i)) + "</s>" + html.substring(ei + 3+(7*i));
-                }
-                $("#story").html(html);
+                //let html = $('#story').html();
+                // for(let i=0;i<result['edit_lists'].length;i++) {
+                //     let si = result['edit_lists'][i]['start'];
+                //     let ei = result['edit_lists'][i]['end'];
+                //     let bdy = result['edit_lists'][i]['body'];
+                //     let j=('0000' + i).slice(-4);
+                //     html = html.substring(0, si+(31*i)) + "<s onclick=showSuggests(j)>" + html.substring(si+(31*i));
+                //     html = html.substring(0, ei + 27+(31*i)) + "</s>" + html.substring(ei +27+(31*i));
+                // }
+                console.log(result['edit_lists']);
+                //$("#story").html(html);
 
             },
             error: function (error) {
                 console.log(error);
             }
         });
-    });
-    $("#see_edit").click(function (e) {
-        e.preventDefault();
+
 
     });
+
+
 </script>
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <!-- 	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script> -->

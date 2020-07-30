@@ -1,0 +1,6 @@
+select `users`.*, `contributions`.`first_key` as `laravel_through_key` from `users` inner join `contributions` on `contributions`.`second_local_key` = `users`.`second_key` where `contributions`.`first_key` is null limit 1
+SELECT * from users where users.id=(SELECT user_id FROM 
+contributions INNER JOIN primary_contributions
+ON contributions.id = primary_contributions.contribution_id);
+
+SELECT * from users where users.id=(SELECT user_id FROM contributions INNER JOIN primary_contributions ON contributions.id = primary_contributions.contribution_id WHERE contributions.id=2);
