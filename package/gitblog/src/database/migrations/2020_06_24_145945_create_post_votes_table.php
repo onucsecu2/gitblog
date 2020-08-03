@@ -20,9 +20,9 @@ class CreatePostVotesTable extends Migration
             $table->integer('vote');
             $table->timestamps();
         });
-            Schema::table('post_votes', function(Blueprint $table){
+        Schema::table('post_votes', function(Blueprint $table){
                 $table->foreign('post_id')->references('id')->on('posts')->onDelete('cascade')->onUpdate('cascade');
-            });
+        });
     }
 
     /**

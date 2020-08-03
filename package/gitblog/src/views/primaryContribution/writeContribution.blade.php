@@ -20,7 +20,8 @@
 		<form method="POST" action="/primary/pull/request">
 			@csrf
 			<textarea name="article" id="mytextarea">{!!$post->body!!}</textarea>
-			<input type='hidden' name='id' value="{{$post->id}}"></input>
+			<input type='hidden' name='post_id' value="{{$post->id}}"></input>
+
 			<button  style="margin: 10px;" type="submit" class="btn btn-primary">Submit</button>
 		</form>
 	</div>

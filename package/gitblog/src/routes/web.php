@@ -48,4 +48,5 @@ Route::group([
     Route::get('/get/info/{postId}', 'GitblogApiResponseController@getInfo');
     Route::post('/post/info/vote', 'GitblogApiResponseController@postVoteResponse');
     Route::post('/post/info/edit', 'GitblogApiResponseController@postEditResponse');
+    Route::post('/post/vote', 'GitblogApiResponseController@voteOriginalArticle');
 });

@@ -22,8 +22,7 @@
         padding:0px 0px 0px 0px;
     }
     ul.edit_tools li {
-        align:center;
-
+        alignment:center;
         margin: 5px;
         padding: 5px 5px 5px 5px;
         cursor: pointer;
@@ -112,8 +111,7 @@
               <div class="card-body">
 					<ul>
                         <li style="list-style-type: none;">
-                            <button  type="button" class="btn btn-light" data-toggle="tooltip" data-placement="top" title="Turn on notification for this story">
-                                <i class="fas fa-thumbs-up" area-hidden="true"></i>
+                            <button  id="thumbs_up" type="button" class="btn btn-light" data-toggle="tooltip" data-placement="top" title="Like this post! ">
                             </button>
                         </li>
                         <li style="list-style-type: none;">
@@ -133,7 +131,6 @@
                                 </button>
                             </a>
                         </li>
-{{--                        href="{{ url('/pull/'. $post->id)}}"--}}
                         <li style="list-style-type: none;">
                             <button  type="button" class="btn btn-light" data-toggle="tooltip" data-placement="top" title="Save this story">
                                 <i class="fa fa-bookmark-o" aria-hidden="true"></i>
@@ -161,8 +158,8 @@
                         <div id="story" >
                             <p  class="card-text">{!!$post->body!!}</p>
                             <ul class="tools">
-                                <li><i id="upvote_line" style="color:white" class="fas fa-thumbs-up"></i></li>
-                                <li><i id="downvote_line"style="color:white" class="fas fa-thumbs-down"></i></li>
+                                <li><i class="fas fa-thumbs-up" id="upvote_line" style="color:white"></i></li>
+                                <li><i class="fas fa-thumbs-down" id="downvote_line" style="color:white"></i></li>
                                 <li><i id="edit_line" style="color:white" class="fas fa-edit"></i></li>
                                 <li><i style="color:white" class="fas fa-comment-alt"></i></li>
                                 <li><i style="color:white" class="fab fa-facebook-square"></i></li>
@@ -188,7 +185,7 @@
 	<!-- Optional JavaScript -->
 	<script type="text/javascript">
 		var post_id={{$post->id}};
-// 		console.log(post_id);
+
 		function getSelectionText() {
 		    var text = "";
 		    if (window.getSelection) {
@@ -196,19 +193,19 @@
 		    } else if (document.selection && document.selection.type != "Control") {
 		        text = document.selection.createRange().text;
 		    }
-		    // console.log(text);
 			return text;
 		}
-		var pageX;
-		var pageY;
-		var st,en;
-		var selectedText;
-		$(function(){
+
+        let pageX;
+        let pageY;
+        let st, en;
+        let selectedText;
+        $(function(){
 		  $("#story").on('mouseup', function(e){
-		    var thisText = $(this).html();
-		    var tmpText = getSelectionText();
-		    var start = thisText.indexOf(tmpText);
-		    var end = start + tmpText.length;
+		    let thisText = $(this).html();
+		    let tmpText = getSelectionText();
+		    let start = thisText.indexOf(tmpText);
+		    let end = start + tmpText.length;
 		    if (start >0 && end > 0){
 		        console.log("start: " + start);
 		        console.log("end: " + end);
@@ -307,7 +304,7 @@
 		    });
 		});
 
-		$("#downvote_line").click(function(e) {
+		$('#downvote_line').click(function(e) {
 		    e.preventDefault();
 		    $.ajax({
 		        type: "POST",
@@ -333,6 +330,21 @@
 	</script>
 	<script type="text/javascript">
 
+        // <i   class="fa-thumbs-o-up" area-hidden="true"></i>
+
+
+        function updateAppearentThumbsUp(resultElement) {
+            let $element =document.getElementById("thumbs_up");
+            $element.innerHTML = '';
+            if(resultElement==true){
+                $element.innerHTML=("<i class='fas fa-thumbs-up' area-hidden='true'></i>");
+            }
+            else{
+                $element.innerHTML=("<i class='far fa-thumbs-up' area-hidden='true'></i>");
+            }
+        }
+
+        // <i   class="fas fa-thumbs-up" area-hidden="true"></i>
 		$(document).ready(function(){
     		$.ajax({
     		   url: 'http://127.0.0.1:8000/api/get/info/{{$post->id}}',
@@ -347,7 +359,7 @@
     		       document.getElementById("pulls").innerHTML =result['pull'];
     		       document.getElementById("votes").innerHTML =result['vote'];
     		       document.getElementById("edits").innerHTML =result['edit'];
-
+                   updateAppearentThumbsUp(result['vote_status']);
                },
     		   error: function (error) {
     			   console.log(error);
@@ -356,9 +368,67 @@
 	 });
 	$("#see_edit").click(function(e) {
 		    e.preventDefault();
-
 	});
 	</script>
+    <script type="text/javascript">
+
+        $("#thumbs_up").click(function(e) {
+            e.preventDefault();
+
+            let vote=getVoteStatus();
+
+            changeVoteCounter(vote);
+            let v=0;
+            if(vote){
+                v=-1;
+            }else{
+                v=1;
+            }
+            $.ajax({
+                type: "POST",
+                url: "http://127.0.0.1:8000/api/post/vote",
+                data: {
+                    post_id: post_id,
+                    vote: v,
+
+                },
+                headers: {
+                    'Authorization': 'Bearer {{$token}}'
+                },
+                success: function(result) {
+                    console.log(result);
+                },
+                error: function(result) {
+                    console.log(result);
+                }
+            });
+        });
+        function changeVoteCounter(vote) {
+            let element =document.getElementById("votes");
+            let number=element.innerHTML;
+            let n=parseInt(number);
+            if(vote){
+                n=n-1;
+                updateAppearentThumbsUp(false);
+            }else{
+                n=n+1;
+                updateAppearentThumbsUp(true);
+            }
+            element.innerHTML=n.toString();
+
+        }
+        function getVoteStatus() {
+            let element =document.getElementById("thumbs_up").children[0];
+            let class_name=element.getAttribute("class");
+            if(class_name =="fas fa-thumbs-up"){
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+    </script>
+
 	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <!-- 	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script> -->
 	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>

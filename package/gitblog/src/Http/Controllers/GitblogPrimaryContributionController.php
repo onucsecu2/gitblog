@@ -31,15 +31,28 @@ class GitblogPrimaryContributionController extends Controller
     }
     public function sendContributionRequest(Request $request) {
         $article=helper::articleSuggestion($request->article);
-        $contribution=Contribution::create([
-            'user_id' => Auth::id(),
-            'body' => $article,
-            'status' => 'PENDING',
-        ]);
-        PrimaryContribution::create([
-            'post_id'=> $request->id,
-            'contribution_id' => $contribution->id,
-        ]);
+        /*use transaction DB::*/
+        DB::transaction(function() use ($article,$request) {
+            $contribution=Contribution::create([
+                'user_id' => Auth::id(),
+                'body' => $article,
+                'status' => 'PENDING',
+            ]);
+            PrimaryContribution::create([
+                'post_id'=> $request->post_id,
+                'contribution_id' => $contribution->id,
+            ]);
+        });
+
+//        $contribution=Contribution::create([
+//            'user_id' => Auth::id(),
+//            'body' => $article,
+//            'status' => 'PENDING',
+//        ]);
+//        PrimaryContribution::create([
+//            'post_id'=> $request->post_id,
+//            'contribution_id' => $contribution->id,
+//        ]);
 
         return  redirect('/home');
     }
