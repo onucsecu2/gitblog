@@ -117,5 +117,6 @@
     <orderEntry type="library" name="bootstrap" level="application" />
     <orderEntry type="library" name="0466296eb5" level="application" />
     <orderEntry type="library" name="popper.js" level="application" />
+    <orderEntry type="library" name="tinymce" level="application" />
   </component>
 </module>

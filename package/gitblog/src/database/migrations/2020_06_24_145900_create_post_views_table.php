@@ -13,10 +13,11 @@ class CreatePostViewsTable extends Migration
      */
     public function up()
     {
+
         Schema::create('post_views', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('post_id')->unsigned();
-            $table->integer('views');
+            $table->bigInteger('views');
             $table->timestamps();
         });
        Schema::table('post_views', function(Blueprint $table){

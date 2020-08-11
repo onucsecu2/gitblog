@@ -17,4 +17,7 @@ class Post extends Model
     public function primaryContributions(){
         return $this->hasMany(PrimaryContribution::class,'post_id','id');
     }
+    public function postComments(){
+        return $this->hasMany(PostComment::class,'post_id','id');
+    }
 }

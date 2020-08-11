@@ -40,6 +40,9 @@ Route::group([
 });
 
 /** Contribution Part End **/
+
+/** APi Part **/
+
 Route::group([
     'namespace'=> 'Onu\Gitblog\Http\Controllers\Api',
     'middleware' => 'auth:api',
@@ -49,4 +52,9 @@ Route::group([
     Route::post('/post/info/vote', 'GitblogApiResponseController@postVoteResponse');
     Route::post('/post/info/edit', 'GitblogApiResponseController@postEditResponse');
     Route::post('/post/vote', 'GitblogApiResponseController@voteOriginalArticle');
+    Route::post('/views/article', 'GitblogApiResponseController@viewsOriginalArticle');
+    Route::post('/saved/article', 'GitblogApiResponseController@savedOriginalArticle');
+    Route::post('/secure/article', 'GitblogApiResponseController@secureOriginalArticle');
+    Route::post('/post/comment', 'GitblogApiResponseController@addCommentArticle');
+    Route::post('/comment/reply', 'GitblogApiResponseController@addCommentReply');
 });
