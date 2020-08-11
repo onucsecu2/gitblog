@@ -21,7 +21,7 @@ class CreatePrimaryContributionsTable extends Migration
         });
         Schema::table('primary_contributions', function(Blueprint $table){
             $table->foreign('contribution_id')->references('id')->on('contributions')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('postId')->references('id')->on('posts')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('post_id')->references('id')->on('posts')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 
@@ -32,6 +32,6 @@ class CreatePrimaryContributionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('primary_contributbutes');
+        Schema::dropIfExists('primary_contributions');
     }
 }
