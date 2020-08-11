@@ -13,16 +13,16 @@ class CreatePostVotesTable extends Migration
      */
     public function up()
     {
-    
+
         Schema::create('post_votes', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('postId')->unsigned();
+            $table->bigInteger('post_id')->unsigned();
             $table->integer('vote');
             $table->timestamps();
         });
-            Schema::table('post_votes', function(Blueprint $table){
-                $table->foreign('postId')->references('id')->on('posts')->onDelete('cascade')->onUpdate('cascade');
-            });
+        Schema::table('post_votes', function(Blueprint $table){
+                $table->foreign('post_id')->references('id')->on('posts')->onDelete('cascade')->onUpdate('cascade');
+        });
     }
 
     /**

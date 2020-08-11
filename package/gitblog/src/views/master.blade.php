@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<!-- Required meta tags -->
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<!-- Jquery 3.5.1 uncompressed -->
+	<script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+	@yield('title')
+</head>
+<body>
+	<div class="container">
+		<div class="row">
+			<div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6" style="padding: 5px;">
+				<div  class="card">
+					<div style="height: 100%;position: relative;">
+						<img style="object-fit: cover;height: 620px;" src="https://www.inkwoodresearch.com/wp-content/uploads/edd/2019/10/GLOBAL-SERVERLESS-ARCHITECTURE-MARKET-FORECAST-2019-2027-01.jpg" class="card-img-top" alt="...">
+						<div style="position: absolute;background-color: rgba(0, 0, 0, 0.85);bottom:0%;width:100%;height: 20%;display:table;z-index: 1;">
+							<span style="color:white;margin-left:10px; display:table-cell;vertical-align:middle;text-align: center;"><h3>Serverless Days 2020 Looks at Future of Serverless Architecture</h3></span>
+						</div>
+						<div style="position: absolute;z-index:1;background-color: rgba(195,33,72,1);bottom:45%;width:20%;height: 5%;display:table;">
+							<span style="color:white;margin-left:10px; display:table-cell;vertical-align:middle;text-align: center;padding: 10px;font-weight: bold;">Tech
+							</span>
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+			<div class="col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3" style="padding: 5px;" >
+				<span style=" display: block;">
+					<div class="card">
+						<div style="height: 100%;position: relative;">
+							<img style="object-fit: cover;height: 350px;" src="https://d1vf55kg5nz00t.cloudfront.net/wp-content/uploads/2018/05/Savvycom-AI-Lab.jpg" class="card-img-top" alt="...">
+							<div style="position: absolute;background-color: rgba(0, 0, 0, 0.85);bottom:0%;width:100%;height: 20%;display:table;z-index: 1;">
+								<span style="color:white;margin-left:10px; display:table-cell;vertical-align:middle;text-align: center;"><h5>Artificial intelligence: unleashing its power in healthcare | Technology & AI</h5></span>
+							</div>
+							<div style="position: absolute;z-index:1;background-color: rgba(195,33,72,1);bottom:45%;width:20%;height: 5%;display:table;">
+								<span style="color:white;margin-left:10px; display:table-cell;vertical-align:middle;text-align: center;padding: 10px;font-weight: bold;">AI
+								</span>
+							</div>
+						</div>
+					</div>
+					<div class="card" style="height: 100%;">
+						<div style="height: 100%;position: relative;">
+							<img style="object-fit: cover;height: 270px;" src="https://s3-eu-west-1.amazonaws.com/wbm.thumbnail/all/144953_1280.jpg" class="card-img-top" alt="...">
+							<div style="position: absolute;background-color: rgba(0, 0, 0, 0.85);bottom:0%;width:100%;height: 20%;display:table;z-index: 1;">
+								<span style="color:white;margin-left:10px; display:table-cell;vertical-align:middle;text-align: center;"><h5>How DNA test surprises about ancestry change our sense of ...</h5></span>
+							</div>
+							<div style="position: absolute;z-index:1;background-color: rgba(195,33,72,1);bottom:45%;width:20%;height: 5%;display:table;">
+								<span style="color:white;margin-left:10px; display:table-cell;vertical-align:middle;text-align: center;padding: 10px;font-weight: bold;">Genetics Engineering
+								</span>
+							</div>
+						</div>
+
+					</div>
+				</span>
+			</div>
+			<div class="col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3" style="padding: 5px;" >
+				<span style=" display: block;">
+					<div class="card">
+						<div style="height: 100%;position: relative;">
+							<img style="object-fit: cover;height: 270px;" src="https://cms-assets.bookingexperts.nl/media/767/48/preprocessed.jpg" class="card-img-top" alt="...">
+							<div style="position: absolute;background-color: rgba(0, 0, 0, 0.85);bottom:0%;width:100%;height: 20%;display:table;z-index: 1;">
+								<span style="color:white;margin-left:10px; display:table-cell;vertical-align:middle;text-align: center;"><h5>SARS-CoV-2 protein effectively shuts down production of proteins in the host</h5></span>
+							</div>
+							<div style="position: absolute;z-index:1;background-color: rgba(195,33,72,1);bottom:45%;width:20%;height: 5%;display:table;">
+								<span style="color:white;margin-left:10px; display:table-cell;vertical-align:middle;text-align: center;padding: 10px;font-weight: bold;">Bio
+								</span>
+							</div>
+						</div>
+					</div>
+					<div class="card">
+						<div style="height: 100%;position: relative;">
+							<img style="object-fit: cover;height: 350px;" src="https://cache.desktopnexus.com/thumbseg/1825/1825021-bigthumbnail.jpg" class="card-img-top" alt="...">
+							<div style="position: absolute;background-color: rgba(0, 0, 0, 0.85);bottom:0%;width:100%;height: 20%;display:table;z-index: 1;">
+								<span style="color:white;margin-left:10px; display:table-cell;vertical-align:middle;text-align: center;"><h5>International Atomic Energy Agency Next Generation Nuclear Reactors: IAEA and GIF Call for </h5></span>
+							</div>
+							<div style="position: absolute;z-index:1;background-color: rgba(195,33,72,1);bottom:45%;width:20%;height: 5%;display:table;">
+								<span style="color:white;margin-left:10px; display:table-cell;vertical-align:middle;text-align: center;padding: 10px;font-weight: bold;">Nuclear
+								</span>
+							</div>
+						</div>
+					</div>
+
+				</span>
+			</div>
+
+
+		</div>
+		<div class="row" >
+			<div class="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-4" style="padding: 5px;">
+				<div class="card">
+					<img style="height: 100%"  src="https://www.universetoday.com/wp-content/uploads/2011/12/VirtualAstro-Stargazing-Graphic-copy.jpg" class="card-img-top" alt="...">
+				</div>
+			</div>
+			<div class="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-4" style="padding: 5px;">
+				<div class="card" >
+					<img style="height: 100%" src="https://media.gettyimages.com/photos/abstract-background-of-spheres-and-wireframe-landscape-picture-id1017193718?s=612x612" class="card-img-top" alt="...">
+				</div>
+			</div>
+			<div class="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-4" style="padding: 5px;">
+				<div  class="card" style="height: 100%" >
+					<img style="height: 100%" src="https://media.gettyimages.com/photos/technology-abstract-picture-id1148091793?s=612x612" class="card-img-top ">
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+
+</body>
+</html>

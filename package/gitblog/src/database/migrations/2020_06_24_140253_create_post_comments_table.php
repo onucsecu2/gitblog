@@ -8,23 +8,24 @@ class CreatePostCommentsTable extends Migration
 {
     /**
      * Run the migrations.
-     *
+     /-
      * @return void
      */
     public function up()
     {
-       
+
         Schema::create('post_comments', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('postId')->unsigned();
-            $table->bigInteger('userId')->unsigned();
-            $table->longText('body');
+            $table->bigInteger('post_id')->unsigned();
+            $table->bigInteger('user_id')->unsigned();
+            $table->bigInteger('comment_id')->unsigned();
             $table->timestamps();
         });
         Schema::table('post_comments', function(Blueprint $table){
-                $table->foreign('userId')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
-                $table->foreign('postId')->references('id')->on('posts')->onDelete('cascade')->onUpdate('cascade');
-                
+                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
+                $table->foreign('post_id')->references('id')->on('posts')->onDelete('cascade')->onUpdate('cascade');
+                $table->foreign('comment_id')->references('id')->on('comments')->onDelete('cascade')->onUpdate('cascade');
+
         });
     }
 
@@ -34,7 +35,6 @@ class CreatePostCommentsTable extends Migration
      * @return void
      */
     public function down()
-    {
-        Schema::dropIfExists('post_comments');
+    {        Schema::dropIfExists('post_comments');
     }
 }

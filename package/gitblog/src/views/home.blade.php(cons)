@@ -1,0 +1,4 @@
+@extends('Gitblog::master')
+@section('title')
+    <title>Gitblog-Home</title>
+@endsection

@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace  Onu\Gitblog;
 use Illuminate\Support\ServiceProvider;
 class GitBlogServiceProvider extends ServiceProvider
@@ -7,9 +7,8 @@ class GitBlogServiceProvider extends ServiceProvider
         $this->loadRoutesFrom(__DIR__.'/routes/web.php');
         $this->loadViewsFrom(__DIR__.'/views','Gitblog');
         $this->loadMigrationsFrom(__DIR__.'/database/migrations');
-       
     }
     public function register() {
-        
+
     }
 }

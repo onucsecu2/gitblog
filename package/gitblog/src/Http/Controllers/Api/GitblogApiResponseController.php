@@ -3,70 +3,103 @@
 namespace Onu\Gitblog\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use http\Message\Body;
+use Onu\Gitblog\Models\Comment;
+use Onu\Gitblog\Models\CommentReply;
+use Onu\Gitblog\Models\LockArticle;
+use Onu\Gitblog\Models\Post;
+use Onu\Gitblog\Models\PostComment;
+use Onu\Gitblog\Models\SavedArticle;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Onu\Gitblog\Models\PostResponseEdit;
 use Onu\Gitblog\Models\PostResponseVote;
-
+use Onu\Gitblog\Helpers\helper;
+use Onu\Gitblog\Models\PostVote;
+use Onu\Gitblog\Models\UserVote;
 
 
 
 class GitblogApiResponseController extends Controller
 {
 
-       public function test() {
+//       public function test() {
+//
+//           if(!$user= auth()->user()){
+//               return response()->json(['error' => 'Access Denied']);
+//
+//           }
+//           $token =auth('api')->login($user);
+//           return $token;
+//       }
 
-           if(!$user= auth()->user()){
-               return response()->json(['error' => 'Access Denied']);
 
-           }
-
-           $token =auth('api')->login($user);
-           return $token;
-       }
        public function getInfo($postId){
-
-           $pull= DB::table('request_contributions')->where('postId',$postId)->count();
-           if(!$votes=DB::select("SELECT vote FROM post_votes WHERE postId=".$postId)){
+           $user_id=Auth::id();
+           $pull = DB::table('contributions')
+               ->Join('primary_contributions', 'contributions.id', '=', 'primary_contributions.contribution_id')
+               ->select('contributions.*')
+               ->where('primary_contributions.post_id','=',$postId)
+               ->count();
+           if(UserVote::where('user_id',$user_id)->where('post_id',$postId)->exists()) {
+               $vote_status = true;
+           }else{
+               $vote_status=false;
+           }
+           if(!$votes=DB::select("SELECT vote FROM post_votes WHERE post_id=".$postId)){
                $vote=0;
            }else{
                $vote=$votes[0]->vote;
            }
-           if(!$views=DB::select("SELECT views FROM post_views WHERE postId=".$postId)){
+           if(!$views=DB::select("SELECT views FROM post_views WHERE post_id=".$postId)){
                $view=0;
            }else{
                $view=$views[0]->views;
            }
-           if(!$edits=DB::select("SELECT count(postId) AS cnt FROM `post_response_edits` WHERE postId=".$postId)){
+           if(!$edits=DB::select("SELECT count(post_id) AS cnt FROM `post_response_edits` WHERE post_id=".$postId)){
                $edit=0;
            }else{
                $edit=$edits[0]->cnt;
            }
-           $edit_lists=DB::table('post_response_edits')->where('postId',$postId)->get();
+           if(DB::table('saved_articles')->where('post_id',$postId)->where('user_id',Auth::id())->exists()){
+               $save=true;
+           }else{
+               $save=false;
+           }
+           if(DB::table('lock_articles')->where('post_id',$postId)->exists()){
+                $lock=true;
+           }else{
+               $lock=false;
+           }
+           $edit_lists=DB::table('post_response_edits')->where('post_id',$postId)->orderBy('start', 'ASC')->get();
 
+           $edit_lists_obj=helper::editResponseProcess($edit_lists);
            return response()->json(['vote' => $vote,
+                                    'vote_status'=>$vote_status,
                                     'pull'=>$pull,
                                     'view'=>$view,
+                                    'save'=>$save,
                                     'edit'=>$edit,
-                                    'edit_lists'=>$edit_lists
+                                    'secure'=>$lock,
+                                    'edit_lists'=>$edit_lists_obj
            ]);
        }
 
-       public function postVoteResponse(Request $request) {
+        public function postVoteResponse(Request $request) {
            PostResponseVote::create([
-               'userId' => Auth::id(),
-               'postId'=>$request->postId,
+               'user_id' => Auth::id(),
+               'post_id'=>$request->post_id,
                'start' => $request->start,
                'end'=>$request->end,
                'vote'=>$request->vote,
            ]);
            return response()->json(['success' => 'OK']);
        }
-       public function postEditResponse(Request $request) {
+        public function postEditResponse(Request $request) {
            PostResponseEdit::create([
-               'userId' => Auth::id(),
-               'postId'=>$request->postId,
+               'user_id' => Auth::id(),
+               'post_id'=>$request->post_id,
                'start' => $request->start,
                'end'=>$request->end,
                'body'=>$request->body,
@@ -74,5 +107,116 @@ class GitblogApiResponseController extends Controller
            ]);
            return response()->json(['success' => 'OK']);
        }
+        public function voteContributionArticle(Request $request) {
 
+            return response()->json(['success' => 'OK']);
+        }
+        public function voteOriginalArticle(Request $request) {
+           if($request->vote==1){
+               return $this->addVote($request->post_id);
+
+           }else{
+              return $this->deleteVote($request->post_id);
+           }
+        }
+        public function viewsOriginalArticle(Request $request) {
+           DB::table('post_views')->increment('views',1);
+           return response()->json(['success' => 'OK']);
+        }
+        public function savedOriginalArticle(Request $request) {
+            if($request->command==1){
+                return $this->addSaveArticle($request->post_id);
+            }else{
+                return $this->deleteSaveArticle($request->post_id);
+            }
+        }
+        public function secureOriginalArticle(Request $request){
+            $post=Post::find($request->post_id)->first();
+
+            if($post->user_id==Auth::id()){
+                if($request->command==1){
+                    return $this->lockArticle($request->post_id);
+                }else{
+                    return $this->unlockArticle($request->post_id);
+                }
+            }else{
+                return response()->json(['success' => $request]);
+            }
+        }
+
+        public function viewsContributionArticle(Request $request) {
+            return response()->json(['success' => 'OK']);
+        }
+
+        public function addCommentArticle(Request $request){
+            $comment=Comment::create([
+                'body'=>$request->body
+            ]);
+            PostComment::create([
+                'post_id'=>$request->post_id,
+                'user_id'=>Auth::id(),
+                'comment_id'=>$comment->id
+            ]);
+            return response()->json(['success' => 'Comment OK']);
+        }
+        public function  addCommentReply(Request $request){
+            $comment=Comment::create([
+                'body'=>$request->body
+            ]);
+            CommentReply::create([
+                'user_id'=>Auth::id(),
+                'comment_id'=>$request->comment_id
+            ]);
+            return response()->json(['success' => 'Comment OK']);
+        }
+        /**
+         private methods section
+         **/
+
+        private function addVote($post_id){
+           UserVote::create([
+               'user_id'=>Auth::id(),
+               'post_id'=> $post_id
+           ]);
+           $this->updateVote(1,$post_id);
+           return response()->json(['success' => 'Vote Updated']);
+        }
+        private function deleteVote($post_id){
+            DB::table('user_votes')->where('user_id',Auth::id())->where('post_id',$post_id)->delete();
+            $this->updateVote(-1,$post_id);
+            return response()->json(['success' => 'Unvoted']);
+        }
+        private function updateVote($val,$post_id){
+            if($val==1){
+                DB::table('post_votes')->where('post_id',$post_id)->increment('vote',1);
+            }else{
+                DB::table('post_votes')->where('post_id',$post_id)->decrement('vote',1);
+
+            }
+        }
+        private function addSaveArticle($post_id)
+        {
+            SavedArticle::create([
+                'post_id'=>$post_id,
+                'user_id'=>Auth::id()
+            ]);
+            return response()->json(['success' => 'Bookmarked']);
+        }
+        private function deleteSaveArticle($post_id)
+        {
+            DB::table('saved_articles')->where('post_id',$post_id)->where('user_id',Auth::id())->delete();
+            return response()->json(['success' => 'Bookmark Removed']);
+        }
+        private function unlockArticle($post_id)
+        {
+            DB::table('lock_articles')->where('post_id',$post_id)->delete();
+            return response()->json(['success' => 'Unlocked']);
+        }
+        private function lockArticle($post_id)
+        {
+            LockArticle::create([
+                'post_id'=>$post_id
+            ]);
+            return response()->json(['success' => 'Locked']);
+        }
 }

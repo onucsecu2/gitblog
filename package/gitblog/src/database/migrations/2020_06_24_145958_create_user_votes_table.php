@@ -16,14 +16,14 @@ class CreateUserVotesTable extends Migration
 
         Schema::create('user_votes', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('userId')->unsigned();
-            $table->bigInteger('postId')->unsigned();
+            $table->bigInteger('user_id')->unsigned();
+            $table->bigInteger('post_id')->unsigned();
             $table->timestamps();
         });
        Schema::table('user_votes', function(Blueprint $table){
-                $table->foreign('userId')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
-                $table->foreign('postId')->references('id')->on('posts')->onDelete('cascade')->onUpdate('cascade');
-                
+                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
+                $table->foreign('post_id')->references('id')->on('posts')->onDelete('cascade')->onUpdate('cascade');
+
             });
     }
 

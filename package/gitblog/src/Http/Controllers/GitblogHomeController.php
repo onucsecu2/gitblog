@@ -3,8 +3,7 @@ namespace Onu\Gitblog\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Onu\Gitblog\Models\Post;
-
-
+use Onu\Gitblog\Models\PrimaryContribution;
 
 
 class GitblogHomeController extends Controller
@@ -20,7 +19,7 @@ class GitblogHomeController extends Controller
         $user= auth()->user();
         $token =auth('api')->login($user);
 
-        return view('Gitblog::details',['post'=>$post,'token'=>$token]);
+        return view('Gitblog::showArticle',['post'=>$post,'token'=>$token]);
     }
     public function editPost($slug){
         $post = Post::where('slug', $slug)->firstOrFail();
@@ -30,9 +29,22 @@ class GitblogHomeController extends Controller
     }
     public function test($postId){
 
-//         $pulls= DB::table('request_contributions')->where('postId',$postId)->count();
-//         return $pulls;
-//         //$cars = array("Volvo", "BMW", "Toyota");
-//         //return $cars[];
+//            $edit_lists=DB::table('post_response_edits')->where('postId',$postId)->orderBy('start', 'ASC')->get();
+//            $edit_obj=[];
+//            for($i=0;$i<sizeof($edit_lists);$i++){
+//                if(!isset($edit_obj[strval($edit_lists[$i]->start).strval($edit_lists[$i]->end)][$edit_lists[$i]->body])) {
+//                    $edit_obj[strval($edit_lists[$i]->start) . strval($edit_lists[$i]->end)][$edit_lists[$i]->body][] = $edit_lists[$i]->start;
+//                    $edit_obj[strval($edit_lists[$i]->start) . strval($edit_lists[$i]->end)][$edit_lists[$i]->body][] = $edit_lists[$i]->end;
+//                    $edit_obj[strval($edit_lists[$i]->start) . strval($edit_lists[$i]->end)][$edit_lists[$i]->body][] = $edit_lists[$i]->userId;
+//                    $edit_obj[strval($edit_lists[$i]->start) . strval($edit_lists[$i]->end)][$edit_lists[$i]->body][3] = 1;
+//                }else{
+//                    $edit_obj[strval($edit_lists[$i]->start) . strval($edit_lists[$i]->end)][$edit_lists[$i]->body][3] ++;
+//                }
+//            }
+//            $edit_obj[strval($edit_lists[0]->start).strval($edit_lists[0]->end)]=52;
+//            return $edit_obj;
+        $posts=PrimaryContribution::where('post_id',1)->first();
+        return $posts->contribution->user->name;
     }
 }
+
