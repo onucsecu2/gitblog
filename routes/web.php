@@ -21,7 +21,4 @@ use Illuminate\Support\Facades\Route;
 Auth::routes();
 
 Route::get('/home_project', 'HomeController@index')->name('home');
-Route::get('/logout', function () {
-    Auth::logout();
-    return redirect('/login');
-});
+Route::get('/logout','HomeController@logout');
