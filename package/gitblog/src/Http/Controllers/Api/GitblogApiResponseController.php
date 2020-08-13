@@ -35,45 +35,16 @@ class GitblogApiResponseController extends Controller
 //       }
 
 
-       public function getInfo($postId){
+       public function getInfo($post_id){
            $user_id=Auth::id();
-           $pull = DB::table('contributions')
-               ->Join('primary_contributions', 'contributions.id', '=', 'primary_contributions.contribution_id')
-               ->select('contributions.*')
-               ->where('primary_contributions.post_id','=',$postId)
-               ->count();
-           if(UserVote::where('user_id',$user_id)->where('post_id',$postId)->exists()) {
-               $vote_status = true;
-           }else{
-               $vote_status=false;
-           }
-           if(!$votes=DB::select("SELECT vote FROM post_votes WHERE post_id=".$postId)){
-               $vote=0;
-           }else{
-               $vote=$votes[0]->vote;
-           }
-           if(!$views=DB::select("SELECT views FROM post_views WHERE post_id=".$postId)){
-               $view=0;
-           }else{
-               $view=$views[0]->views;
-           }
-           if(!$edits=DB::select("SELECT count(post_id) AS cnt FROM `post_response_edits` WHERE post_id=".$postId)){
-               $edit=0;
-           }else{
-               $edit=$edits[0]->cnt;
-           }
-           if(DB::table('saved_articles')->where('post_id',$postId)->where('user_id',Auth::id())->exists()){
-               $save=true;
-           }else{
-               $save=false;
-           }
-           if(DB::table('lock_articles')->where('post_id',$postId)->exists()){
-                $lock=true;
-           }else{
-               $lock=false;
-           }
-           $edit_lists=DB::table('post_response_edits')->where('post_id',$postId)->orderBy('start', 'ASC')->get();
-
+           $pull = $this->getPullCount($post_id);
+           $vote_status=$this->getVoteStatus($user_id,$post_id);
+           $vote=$this->getVoteCount($post_id);
+           $view=$this->getViewCount($post_id);
+           $edit=$this->getEditCount($post_id);
+           $save=$this->getSavedStatus($post_id,$user_id);
+           $lock=$this->getLockStatus($post_id);
+           $edit_lists=$this->getEditsList($post_id);
            $edit_lists_obj=helper::editResponseProcess($edit_lists);
            return response()->json(['vote' => $vote,
                                     'vote_status'=>$vote_status,
@@ -219,4 +190,72 @@ class GitblogApiResponseController extends Controller
             ]);
             return response()->json(['success' => 'Locked']);
         }
+
+    private function getPullCount($post_id)
+    {
+        DB::table('contributions')
+            ->Join('primary_contributions', 'contributions.id', '=', 'primary_contributions.contribution_id')
+            ->select('contributions.*')
+            ->where('primary_contributions.post_id','=',$post_id)
+            ->count();
+    }
+
+    private function getVoteStatus($user_id, $post_id)
+    {
+        if(UserVote::where('user_id',$user_id)->where('post_id',$post_id)->exists()) {
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    private function getVoteCount($post_id)
+    {
+        if(!$votes=DB::select("SELECT vote FROM post_votes WHERE post_id=".$post_id)){
+            return 0;
+        }else{
+            return $votes[0]->vote;
+        }
+    }
+
+    private function getViewCount($post_id)
+    {
+        if(!$views=DB::select("SELECT views FROM post_views WHERE post_id=".$post_id)){
+            return 0;
+        }else{
+            return $views[0]->views;
+        }
+    }
+
+    private function getEditCount($post_id)
+    {
+        if(!$edits=DB::select("SELECT count(post_id) AS cnt FROM `post_response_edits` WHERE post_id=".$post_id)){
+            return 0;
+        }else{
+            return $edits[0]->cnt;
+        }
+    }
+
+    private function getSavedStatus($post_id,$user_id)
+    {
+        if(DB::table('saved_articles')->where('post_id',$post_id)->where('user_id',$user_id)->exists()){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    private function getLockStatus($post_id)
+    {
+        if(DB::table('lock_articles')->where('post_id',$post_id)->exists()){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    private function getEditsList($post_id)
+    {
+       return DB::table('post_response_edits')->where('post_id',$post_id)->orderBy('start', 'ASC')->get();
+    }
 }
