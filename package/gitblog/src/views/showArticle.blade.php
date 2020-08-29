@@ -182,7 +182,6 @@
                                 <li><textarea id="edit_ref" class="form-control" rows="2"></textarea></li>
                                 <li style="align:center;display: inline-block;">
                                     <button id="save_edit" type="button" class="btn btn-info">Submit</button>
-
                                     <button id="cancel_edit" type="button" class="btn btn-danger">Cancel</button>
                                 </li>
                             </ul>
@@ -194,30 +193,57 @@
         </div>
         <div class="card mb-3" style="background: rgba(230,230,230,0.58)">
             <div class="card-body">
-            <p>Comments</p>
-            <form  onsubmit="addComment()">
-                @csrf
-                <textarea style="width: 100%;" id="comment_text"></textarea>
-                <button  style="margin: 10px; white-space: nowrap" type="submit" class="btn btn-primary">Submit</button>
-            </form>
-            @foreach($post->postComments as $comment)
-                    <br>
-                    <div  style="background: rgba(253,253,253,0.58)">
-                        <div><b>{{$comment->user->name}}</b></div>
-                        <div>
-                            <p class="card-text">{!! $comment->comment->body!!}</p>
-                        </div>
-                    </div>
+                <p>Comments</p>
+                <form  onsubmit="addComment()">
+                    @csrf
+                    <textarea style="width: 100%;" id="comment_text"></textarea>
+                    <button  style="margin: 10px; white-space: nowrap" type="submit" class="btn btn-primary">Submit</button>
+                </form>
+                <script>
+                    let elementS;
+                    let elementT;
+                    let elem_a;
+                    let cnt_reply;
+                    let elem_b;
+                </script>
+                <div id="comment_section"></div>
+{{--                <div  style="background: rgba(253,253,253,0.58)">--}}
+{{--                    <div><b>{{$comment->user->name}}</b></div>--}}
+{{--                    <div>--}}
+{{--                        <p class="card-text">{!! $comment->comment->body!!}</p>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--                    <div>--}}
+{{--                        <script>--}}
+{{--                            elementS =document.currentScript;--}}
+{{--                            elementT=elementS.parentElement;--}}
+{{--                            elem_a = document.createElement("a");--}}
+{{--                            elem_a.setAttribute('id', "reply");--}}
+{{--                            elem_a.setAttribute('onclick', 'showReplyBox(this,{{$comment->comment->id}})');--}}
+{{--                            elem_a.setAttribute('style','color:#1d68a7;cursor:pointer;');--}}
+{{--                            elem_a.innerText="Reply";--}}
+{{--                            elementT.appendChild(elem_a);--}}
 
-                    <div>
-                        <a id="reply" onclick="showReply(this,{{ $comment->comment->id}})" style="cursor: pointer;color: #1d68a7">Reply</a>
-                        
-                    </div>
-                <div>
-
-                </div>
-            @endforeach
-        </div>
+{{--                            cnt_reply={{sizeof($comment->comment->reply)}};--}}
+{{--                            if(cnt_reply>0){--}}
+{{--                                let replies;--}}
+{{--                                @foreach($comment->comment->reply as $reply)--}}
+{{--                                      replies+="<a>{{$reply->comment->body}}</a>";--}}
+{{--                                @endforeach--}}
+{{--                                elem_b = document.createElement("a");--}}
+{{--                                elem_b.setAttribute('onclick',"showReply(this,{{$comment->comment->id}})");--}}
+{{--                                elem_b.setAttribute('style',"cursor: pointer;color: #1d68a7;margin-left: 10px;");--}}
+{{--                                if(cnt_reply>1)--}}
+{{--                                    elem_b.innerText= cnt_reply+" Replies";--}}
+{{--                                else{--}}
+{{--                                    elem_b.innerText= cnt_reply+" Reply";--}}
+{{--                                }--}}
+{{--                                elementT.appendChild(elem_b);--}}
+{{--                            }--}}
+{{--                            elementS.remove();--}}
+{{--                        </script>--}}
+{{--                    </div>--}}
+            </div>
         </div>
     </div>
 
@@ -412,6 +438,20 @@
             },
             error: function (result) {
                 console.log(result);
+            }
+        });
+        $.ajax({
+            url: 'http://127.0.0.1:8000/api/get/comments/{{$post->id}}',
+            type: 'GET',
+            dataType: 'json',
+            headers: {
+                'Authorization': 'Bearer {{$token}}'
+            },
+            success: function (result) {
+                updateAppearanceComment(result['comments']);
+            },
+            error: function (error) {
+                console.log(error);
             }
         });
     });
@@ -619,11 +659,24 @@
             }
         });
     }
-    function showReply(element,id) {
+    function showReplyBox(element,id) {
 
         let parent=element.parentElement;
         parent.innerHTML="<textarea style='width: 100%';></textarea>"+
                         "<button  style='margin: 10px; white-space: nowrap;' onclick='storeReply(this,"+id+")' type='submit' class='btn btn-primary'>Reply</button>";
+    }
+    function showReply(element,id) {
+        let parent=element.parentElement;
+        parent.innerHTML=" <div  style= 'background: rgba(253,253,253,0.58);margin-left=20px;'> <textarea style='width: 100%';></textarea>"+
+            "<button  style='margin: 10px; white-space: nowrap;' onclick='storeReply(this,"+id+")' type='submit' class='btn btn-primary'>Reply</button></div>";
+
+
+        {{--    <div  style="background: rgba(253,253,253,0.58);margin-left=20px;">--}}
+        {{--            <div><b>{{$comment->user->name}}</b></div>--}}
+        {{--                <div>--}}
+        {{--                     <p class="card-text">{!! $comment->comment->body!!}</p>--}}
+        {{--                </div>--}}
+
     }
     function storeReply(element,comment_id){
         let text=element.previousSibling.value;
@@ -646,7 +699,53 @@
             }
         });
     }
+    function updateAppearanceComment(elementResult){
+        console.log(elementResult);
+        let element=document.getElementById('comment_section');
+        element.innerHTML=null;
+        for(let i=0;i<elementResult['data'].length;i++) {
+            element.innerHTML +=
+                "<br>" +
+                "<div  style='background: rgba(253,253,253,0.58)'>" +
+                "<div><b>" + elementResult['data'][i]['name'] + "</b></div>" +
+                "<div>" +
+                "<p class='card-text'>" + elementResult['data'][i]['body'] + "</p>"+
+                "</div>"+
+                "</div>";
+        }
+        let next_load = document.createElement("a");
+        next_load.setAttribute('id', "next_comment");
+        next_load.setAttribute('onclick', 'loadMoreComments(\''+elementResult['next_page_url']+'\')');
+        next_load.setAttribute('style','color:#1d68a7;cursor:pointer;');
+        next_load.innerText="Next";
+        element.appendChild(next_load)
+        if(elementResult['prev_page_url']!=null) {
+            let prev_load = document.createElement("a");
+            prev_load.setAttribute('id', "prev_comment");
+            prev_load.setAttribute('onclick', 'loadMoreComments(\'' + elementResult['prev_page_url'] + '\')');
+            prev_load.setAttribute('style', 'color:#1d68a7;cursor:pointer;margin-left:15px;');
+            prev_load.innerText = "Previous";
+            element.appendChild(prev_load)
+        }
+    }
 
+    function  loadMoreComments(urls) {
+        $.ajax({
+            url: urls,
+            type: 'GET',
+            dataType: 'json',
+            headers: {
+                'Authorization': 'Bearer {{$token}}'
+            },
+            success: function (result) {
+
+                updateAppearanceComment(result['comments']);
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    }
 </script>
 
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->

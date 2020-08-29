@@ -49,6 +49,7 @@ Route::group([
     'prefix'=>"api",
 ],function () {
     Route::get('/get/info/{postId}', 'GitblogApiResponseController@getInfo');
+    Route::get('/get/comments/{postId}', 'GitblogApiResponseController@readComments');
     Route::post('/post/info/vote', 'GitblogApiResponseController@postVoteResponse');
     Route::post('/post/info/edit', 'GitblogApiResponseController@postEditResponse');
     Route::post('/post/vote', 'GitblogApiResponseController@voteOriginalArticle');

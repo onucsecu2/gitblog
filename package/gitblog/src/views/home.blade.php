@@ -31,8 +31,6 @@
     		</div>
   		</div>
 	</div>
-				<!--button type="button" class="btn btn-dark" onclick="location.href='{{ url('/pull/'.$post->id) }}'" >Pull</button-->
-				<!--button type="button" class="btn btn-warning">Edit</button-->
 			@endforeach
 		{{ $posts->links() }}
 	</div>

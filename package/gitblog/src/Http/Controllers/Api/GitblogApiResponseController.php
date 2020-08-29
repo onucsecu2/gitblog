@@ -33,9 +33,7 @@ class GitblogApiResponseController extends Controller
 //           $token =auth('api')->login($user);
 //           return $token;
 //       }
-
-
-       public function getInfo($post_id){
+        public function getInfo($post_id){
            $user_id=Auth::id();
            $pull = $this->getPullCount($post_id);
            $vote_status=$this->getVoteStatus($user_id,$post_id);
@@ -46,6 +44,7 @@ class GitblogApiResponseController extends Controller
            $lock=$this->getLockStatus($post_id);
            $edit_lists=$this->getEditsList($post_id);
            $edit_lists_obj=helper::editResponseProcess($edit_lists);
+
            return response()->json(['vote' => $vote,
                                     'vote_status'=>$vote_status,
                                     'pull'=>$pull,
@@ -53,10 +52,16 @@ class GitblogApiResponseController extends Controller
                                     'save'=>$save,
                                     'edit'=>$edit,
                                     'secure'=>$lock,
+
                                     'edit_lists'=>$edit_lists_obj
            ]);
        }
-
+        public function readComments($post_id){
+            $comments=$this->getComments($post_id);
+            return response()->json([
+                'comments'=>$comments
+            ]);
+        }
         public function postVoteResponse(Request $request) {
            PostResponseVote::create([
                'user_id' => Auth::id(),
@@ -114,11 +119,9 @@ class GitblogApiResponseController extends Controller
                 return response()->json(['success' => $request]);
             }
         }
-
         public function viewsContributionArticle(Request $request) {
             return response()->json(['success' => 'OK']);
         }
-
         public function addCommentArticle(Request $request){
             $comment=Comment::create([
                 'body'=>$request->body
@@ -143,7 +146,6 @@ class GitblogApiResponseController extends Controller
         /**
          private methods section
          **/
-
         private function addVote($post_id){
            UserVote::create([
                'user_id'=>Auth::id(),
@@ -190,72 +192,73 @@ class GitblogApiResponseController extends Controller
             ]);
             return response()->json(['success' => 'Locked']);
         }
-
-    private function getPullCount($post_id)
-    {
+        private function getPullCount($post_id)
+        {
         DB::table('contributions')
             ->Join('primary_contributions', 'contributions.id', '=', 'primary_contributions.contribution_id')
             ->select('contributions.*')
             ->where('primary_contributions.post_id','=',$post_id)
             ->count();
-    }
-
-    private function getVoteStatus($user_id, $post_id)
-    {
-        if(UserVote::where('user_id',$user_id)->where('post_id',$post_id)->exists()) {
-            return true;
-        }else{
-            return false;
         }
-    }
-
-    private function getVoteCount($post_id)
-    {
-        if(!$votes=DB::select("SELECT vote FROM post_votes WHERE post_id=".$post_id)){
-            return 0;
-        }else{
-            return $votes[0]->vote;
+        private function getVoteStatus($user_id, $post_id)
+        {
+            if(UserVote::where('user_id',$user_id)->where('post_id',$post_id)->exists()) {
+                return true;
+            }else{
+                return false;
+            }
         }
-    }
-
-    private function getViewCount($post_id)
-    {
-        if(!$views=DB::select("SELECT views FROM post_views WHERE post_id=".$post_id)){
-            return 0;
-        }else{
-            return $views[0]->views;
+        private function getVoteCount($post_id)
+        {
+            if(!$votes=DB::select("SELECT vote FROM post_votes WHERE post_id=".$post_id)){
+                return 0;
+            }else{
+                return $votes[0]->vote;
+            }
         }
-    }
-
-    private function getEditCount($post_id)
-    {
-        if(!$edits=DB::select("SELECT count(post_id) AS cnt FROM `post_response_edits` WHERE post_id=".$post_id)){
-            return 0;
-        }else{
-            return $edits[0]->cnt;
+        private function getViewCount($post_id)
+        {
+            if(!$views=DB::select("SELECT views FROM post_views WHERE post_id=".$post_id)){
+                return 0;
+            }else{
+                return $views[0]->views;
+            }
         }
-    }
-
-    private function getSavedStatus($post_id,$user_id)
-    {
-        if(DB::table('saved_articles')->where('post_id',$post_id)->where('user_id',$user_id)->exists()){
-            return true;
-        }else{
-            return false;
+        private function getEditCount($post_id)
+        {
+            if(!$edits=DB::select("SELECT count(post_id) AS cnt FROM `post_response_edits` WHERE post_id=".$post_id)){
+                return 0;
+            }else{
+                return $edits[0]->cnt;
+            }
         }
-    }
-
-    private function getLockStatus($post_id)
-    {
-        if(DB::table('lock_articles')->where('post_id',$post_id)->exists()){
-            return true;
-        }else{
-            return false;
+        private function getSavedStatus($post_id,$user_id)
+        {
+            if(DB::table('saved_articles')->where('post_id',$post_id)->where('user_id',$user_id)->exists()){
+                return true;
+            }else{
+                return false;
+            }
         }
-    }
-
-    private function getEditsList($post_id)
-    {
-       return DB::table('post_response_edits')->where('post_id',$post_id)->orderBy('start', 'ASC')->get();
-    }
+        private function getLockStatus($post_id)
+        {
+            if(DB::table('lock_articles')->where('post_id',$post_id)->exists()){
+                return true;
+            }else{
+                return false;
+            }
+        }
+        private function getEditsList($post_id)
+        {
+           return DB::table('post_response_edits')->where('post_id',$post_id)->orderBy('start', 'ASC')->get();
+        }
+        private function getComments($post_id)
+        {
+            return DB::table('post_comments')
+                ->where('post_id',$post_id)
+                ->join('comments', 'post_comments.comment_id', '=', 'comments.id')
+                ->join('users','post_comments.user_id','=','users.id')
+                ->select('body','name')
+                ->simplePaginate(15);
+        }
 }
