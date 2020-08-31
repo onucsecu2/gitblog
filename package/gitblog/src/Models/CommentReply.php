@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class CommentReply extends Model
 {
     protected $fillable = [
-        'user_id','comment_id',
+        'user_id','comment_id','reply_id',
     ];
     public function user() {
         return $this->belongsTo(User::class,'user_id','id');

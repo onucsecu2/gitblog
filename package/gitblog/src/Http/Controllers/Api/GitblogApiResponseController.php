@@ -18,21 +18,57 @@ use Onu\Gitblog\Models\PostResponseVote;
 use Onu\Gitblog\Helpers\helper;
 use Onu\Gitblog\Models\PostVote;
 use Onu\Gitblog\Models\UserVote;
-
+use Symfony\Component\Console\Helper\Table;
 
 
 class GitblogApiResponseController extends Controller
 {
 
-//       public function test() {
-//
+       public function test() {
+
 //           if(!$user= auth()->user()){
 //               return response()->json(['error' => 'Access Denied']);
 //
 //           }
 //           $token =auth('api')->login($user);
 //           return $token;
-//       }
+           $query= DB::table('post_comments')
+               ->where('post_id',4)
+               ->leftjoin('comments', 'post_comments.comment_id', '=', 'comments.id')
+               ->leftjoin('users','post_comments.user_id','=','users.id')
+               ->leftjoin(DB::raw('(SELECT comment_id,COUNT(*) AS cnt FROM comment_replies GROUP BY comment_id) X'),function ( $join )
+               {
+                   $join->on('X.comment_id','=','post_comments.comment_id');
+               }
+               )
+               ->select('body','name','post_comments.comment_id',DB::raw('COALESCE(X.cnt, 0) AS replies'))
+               ->simplePaginate(5);
+//           SELECT
+//    `body`,
+//    `name`,
+//    COALESCE(X.cnt, 0) AS replies,
+//    post_comments.comment_id
+//FROM
+//    `post_comments`
+//LEFT JOIN `comments` ON `post_comments`.`comment_id` = `comments`.`id`
+//LEFT JOIN `users` ON `post_comments`.`user_id` = `users`.`id`
+//LEFT JOIN(
+//               SELECT
+//        comment_id,
+//        COUNT(*) AS cnt
+//    FROM
+//        `comment_replies`
+//    GROUP BY
+//        `comment_id`
+//) X
+//ON
+//    `post_comments`.`comment_id` = X.comment_id
+//WHERE
+//    `post_id` = 4
+//LIMIT 6 OFFSET 1
+
+           return $query;
+       }
         public function getInfo($post_id){
            $user_id=Auth::id();
            $pull = $this->getPullCount($post_id);
@@ -52,7 +88,6 @@ class GitblogApiResponseController extends Controller
                                     'save'=>$save,
                                     'edit'=>$edit,
                                     'secure'=>$lock,
-
                                     'edit_lists'=>$edit_lists_obj
            ]);
        }
@@ -139,9 +174,16 @@ class GitblogApiResponseController extends Controller
             ]);
             CommentReply::create([
                 'user_id'=>Auth::id(),
-                'comment_id'=>$request->comment_id
+                'comment_id'=>$request->comment_id,
+                'reply_id'=>$comment->id
             ]);
             return response()->json(['success' => 'Comment OK']);
+        }
+        public function readReplies($comment_id){
+            $replies=$this->getReplies($comment_id);
+            return response()->json([
+                'replies'=>$replies
+            ]);
         }
         /**
          private methods section
@@ -258,7 +300,21 @@ class GitblogApiResponseController extends Controller
                 ->where('post_id',$post_id)
                 ->join('comments', 'post_comments.comment_id', '=', 'comments.id')
                 ->join('users','post_comments.user_id','=','users.id')
-                ->select('body','name')
+                ->leftjoin(DB::raw('(SELECT comment_id,COUNT(*) AS cnt FROM comment_replies GROUP BY comment_id) X'),function ( $join )
+                {
+                    $join->on('X.comment_id','=','post_comments.comment_id');
+                }
+                )
+                ->select('body','name','post_comments.comment_id',DB::raw('COALESCE(X.cnt, 0) AS replies'))
+                ->simplePaginate(15);
+        }
+        private function getReplies($comment_id)
+        {
+           return DB::table('comment_replies')
+                ->where('comment_id',$comment_id)
+                ->leftjoin('comments','comments.id','=','comment_replies.reply_id')
+                ->leftjoin('users','users.id','=','comment_replies.user_id')
+                ->select('comments.body','users.name')
                 ->simplePaginate(15);
         }
 }

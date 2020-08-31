@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <!-- TinyMCE JavaScript -->
-
+    <meta content="{{$token}}"/>
     <script src="https://code.jquery.com/jquery-3.5.1.js"
             integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
     <meta name="csrf-token" content="{{ csrf_token() }}"/>
@@ -25,14 +25,12 @@
             border-radius: 5px;
             padding: 0px 0px 0px 0px;
         }
-
         ul.edit_tools li {
             alignment: center;
             margin: 5px;
             padding: 5px 5px 5px 5px;
             cursor: pointer;
         }
-
         ul.tools {
             display: none;
             list-style: none;
@@ -43,7 +41,6 @@
             border-radius: 5px;
             padding: 0px 0px 0px 0px;
         }
-
         ul.tools li {
             align: center;
             display: inline-block;
@@ -51,7 +48,6 @@
             padding: 5px 5px 5px 5px;
             cursor: pointer;
         }
-
         .divider {
             width: 5px;
             height: auto;
@@ -61,7 +57,6 @@
 
 </head>
 <body>
-
 <div style="text-align: center;"><h1>GitBlog</h1></div>
 <div class="row">
     <div class="col-md-2 center">
@@ -111,7 +106,6 @@
                                 <span id="episodes">0</span>
                             </div>
                         </li>
-
                     </ul>
                 </div>
             </div>
@@ -207,53 +201,14 @@
                     let elem_b;
                 </script>
                 <div id="comment_section"></div>
-{{--                <div  style="background: rgba(253,253,253,0.58)">--}}
-{{--                    <div><b>{{$comment->user->name}}</b></div>--}}
-{{--                    <div>--}}
-{{--                        <p class="card-text">{!! $comment->comment->body!!}</p>--}}
-{{--                    </div>--}}
-{{--                </div>--}}
-{{--                    <div>--}}
-{{--                        <script>--}}
-{{--                            elementS =document.currentScript;--}}
-{{--                            elementT=elementS.parentElement;--}}
-{{--                            elem_a = document.createElement("a");--}}
-{{--                            elem_a.setAttribute('id', "reply");--}}
-{{--                            elem_a.setAttribute('onclick', 'showReplyBox(this,{{$comment->comment->id}})');--}}
-{{--                            elem_a.setAttribute('style','color:#1d68a7;cursor:pointer;');--}}
-{{--                            elem_a.innerText="Reply";--}}
-{{--                            elementT.appendChild(elem_a);--}}
-
-{{--                            cnt_reply={{sizeof($comment->comment->reply)}};--}}
-{{--                            if(cnt_reply>0){--}}
-{{--                                let replies;--}}
-{{--                                @foreach($comment->comment->reply as $reply)--}}
-{{--                                      replies+="<a>{{$reply->comment->body}}</a>";--}}
-{{--                                @endforeach--}}
-{{--                                elem_b = document.createElement("a");--}}
-{{--                                elem_b.setAttribute('onclick',"showReply(this,{{$comment->comment->id}})");--}}
-{{--                                elem_b.setAttribute('style',"cursor: pointer;color: #1d68a7;margin-left: 10px;");--}}
-{{--                                if(cnt_reply>1)--}}
-{{--                                    elem_b.innerText= cnt_reply+" Replies";--}}
-{{--                                else{--}}
-{{--                                    elem_b.innerText= cnt_reply+" Reply";--}}
-{{--                                }--}}
-{{--                                elementT.appendChild(elem_b);--}}
-{{--                            }--}}
-{{--                            elementS.remove();--}}
-{{--                        </script>--}}
-{{--                    </div>--}}
             </div>
         </div>
     </div>
 
 </div>
-
 <!-- Optional JavaScript -->
-
 <script type="text/javascript">
     var post_id ={{$post->id}};
-
     function getSelectionText() {
         var text = "";
         if (window.getSelection) {
@@ -263,7 +218,6 @@
         }
         return text;
     }
-
     let pageX;
     let pageY;
     let st, en;
@@ -300,8 +254,6 @@
     $(document).on("mousedown", function (e) {
         $('ul.tools').fadeOut(200);
     });
-
-
     $("#edit_line").click(function (e) {
         e.preventDefault();
         $('ul.edit_tools').css({
@@ -370,7 +322,6 @@
             }
         });
     });
-
     $('#downvote_line').click(function (e) {
         e.preventDefault();
         $.ajax({
@@ -393,13 +344,9 @@
             }
         });
     });
-
 </script>
 <script type="text/javascript">
-
-
     $(document).ready(function () {
-
         $.ajax({
             url: 'http://127.0.0.1:8000/api/get/info/{{$post->id}}',
             type: 'GET',
@@ -460,7 +407,6 @@
     });
 </script>
 <script type="text/javascript">
-
     $("#thumbs_up").click(function (e) {
         e.preventDefault();
 
@@ -492,7 +438,6 @@
             }
         });
     });
-
     function changeVoteCounter(vote) {
         let element = document.getElementById("votes");
         let number = element.innerHTML;
@@ -505,9 +450,7 @@
             updateAppearanceThumbsUp(true);
         }
         element.innerHTML = n.toString();
-
     }
-
     function getVoteStatus() {
         let element = document.getElementById("thumbs_up").children[0];
         let class_name = element.getAttribute("class");
@@ -517,7 +460,6 @@
             return false;
         }
     }
-
     function updateAppearanceThumbsUp(resultElement) {
         let $element = document.getElementById("thumbs_up");
         $element.innerHTML = '';
@@ -529,7 +471,6 @@
     }
 </script>
 <script type="text/javascript">
-
     $("#bookmark").click(function (e) {
         e.preventDefault();
 
@@ -561,7 +502,6 @@
             }
         });
     });
-
     function getBookmarkStatus() {
         let element = document.getElementById("bookmark").children[0];
         let class_name = element.getAttribute("class");
@@ -571,7 +511,6 @@
             return false;
         }
     }
-
     function updateAppearanceBookmark(resultElement) {
         let $element = document.getElementById("bookmark");
         $element.innerHTML = '';
@@ -614,7 +553,6 @@
             }
         });
     });
-
     function getSecureStatus() {
         let element = document.getElementById("secure").children[0];
         let class_name = element.getAttribute("class");
@@ -624,7 +562,6 @@
             return false;
         }
     }
-
     function updateAppearanceSecure(resultElement) {
 
         let $element = document.getElementById("secure");
@@ -666,59 +603,84 @@
                         "<button  style='margin: 10px; white-space: nowrap;' onclick='storeReply(this,"+id+")' type='submit' class='btn btn-primary'>Reply</button>";
     }
     function showReply(element,id) {
-        let parent=element.parentElement;
-        parent.innerHTML=" <div  style= 'background: rgba(253,253,253,0.58);margin-left=20px;'> <textarea style='width: 100%';></textarea>"+
-            "<button  style='margin: 10px; white-space: nowrap;' onclick='storeReply(this,"+id+")' type='submit' class='btn btn-primary'>Reply</button></div>";
-
-
-        {{--    <div  style="background: rgba(253,253,253,0.58);margin-left=20px;">--}}
-        {{--            <div><b>{{$comment->user->name}}</b></div>--}}
-        {{--                <div>--}}
-        {{--                     <p class="card-text">{!! $comment->comment->body!!}</p>--}}
-        {{--                </div>--}}
-
-    }
-    function storeReply(element,comment_id){
-        let text=element.previousSibling.value;
-
         $.ajax({
-            type: "POST",
-            url: "http://127.0.0.1:8000/api/comment/reply",
-            data: {
-                body: text,
-                comment_id: comment_id,
-            },
+            url: 'http://127.0.0.1:8000/api/get/reply/'+id,
+            type: 'GET',
+            dataType: 'json',
             headers: {
                 'Authorization': 'Bearer {{$token}}'
             },
             success: function (result) {
-                // console.log(result);
+
+                updateAppearanceReplies(element,result,id);
             },
-            error: function (result) {
-                console.log(result);
+            error: function (error) {
+                console.log(error);
             }
         });
+
+    }
+    function storeReply(element,comment_id){
+        let text=element.previousSibling.value;
+        if(text.length>0) {
+            $.ajax({
+                type: "POST",
+                url: "http://127.0.0.1:8000/api/comment/reply",
+                data: {
+                    body: text,
+                    comment_id: comment_id,
+                },
+                headers: {
+                    'Authorization': 'Bearer {{$token}}'
+                },
+                success: function (result) {
+                    // console.log(result);
+                },
+                error: function (result) {
+                    console.log(result);
+                }
+            });
+        }
+        element.previousSibling.value='';
+        showReply(element,comment_id);
     }
     function updateAppearanceComment(elementResult){
         console.log(elementResult);
         let element=document.getElementById('comment_section');
         element.innerHTML=null;
         for(let i=0;i<elementResult['data'].length;i++) {
+
+            let view_replies=' ';
+            if(elementResult['data'][i]['replies']>0){
+                if(elementResult['data'][i]['replies']>1){
+                    view_replies="<a style='margin-left:25px;cursor:pointer;color:#1d68a7;' onclick='showReply(this,"+elementResult['data'][i]['comment_id']+")'  >View Replies</a>";
+                }else{
+                    view_replies="<a style='margin-left:25px;cursor:pointer;color:#1d68a7;'  onclick='showReply(this,"+elementResult['data'][i]['comment_id']+")' >View Reply</a>";
+                }
+            }
             element.innerHTML +=
                 "<br>" +
-                "<div  style='background: rgba(253,253,253,0.58)'>" +
-                "<div><b>" + elementResult['data'][i]['name'] + "</b></div>" +
-                "<div>" +
-                "<p class='card-text'>" + elementResult['data'][i]['body'] + "</p>"+
-                "</div>"+
+                "<div>"+
+                    "<div style='background: rgba(253,253,253,0.58)'>" +
+                        "<div><b>" + elementResult['data'][i]['name'] + "</b></div>" +
+                        "<div>" +
+                            "<p class='card-text'>" + elementResult['data'][i]['body'] + "</p>"+
+                        "</div>"+
+                    "</div>"+
+                    "<div id='comment_component' style='margin-top: 10px;'>"+
+                        "<a style='cursor:pointer;color:#1d68a7;'  onclick='showReplyBox(this,"+elementResult['data'][i]['comment_id']+")'>Reply</a>"+
+                        view_replies+
+                    "</div>"+
                 "</div>";
         }
-        let next_load = document.createElement("a");
-        next_load.setAttribute('id', "next_comment");
-        next_load.setAttribute('onclick', 'loadMoreComments(\''+elementResult['next_page_url']+'\')');
-        next_load.setAttribute('style','color:#1d68a7;cursor:pointer;');
-        next_load.innerText="Next";
-        element.appendChild(next_load)
+        if(elementResult['next_page_url']!=null) {
+            let next_load = document.createElement("a");
+            next_load.setAttribute('id', "next_comment");
+            next_load.setAttribute('onclick', 'loadMoreComments(\'' + elementResult['next_page_url'] + '\')');
+            next_load.setAttribute('style', 'color:#1d68a7;cursor:pointer;');
+            next_load.innerText = "Next";
+            element.appendChild(next_load)
+        }
         if(elementResult['prev_page_url']!=null) {
             let prev_load = document.createElement("a");
             prev_load.setAttribute('id', "prev_comment");
@@ -728,7 +690,6 @@
             element.appendChild(prev_load)
         }
     }
-
     function  loadMoreComments(urls) {
         $.ajax({
             url: urls,
@@ -746,7 +707,70 @@
             }
         });
     }
+    function  loadMoreReplies(urls,id,element) {
+        $.ajax({
+            url: urls,
+            type: 'GET',
+            dataType: 'json',
+            headers: {
+                'Authorization': 'Bearer {{$token}}'
+            },
+            success: function (result) {
+
+                updateAppearanceReplies(element,result,id);
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    }
+    // <div style='background: rgba(253,253,253,0.58)'>
+    //     <div>
+    //         <b>name</b>
+    //     </div>
+    //     <div>
+    //         <p class='card-text'> commentssaasdaf</p>
+    //     </div>
+    // </div>
+    function updateAppearanceReplies(element,result,id){
+        console.log(result);
+        let parent=element.parentElement;
+        parent.innerHTML='';
+        parent.innerHTML="<textarea style='width: 100%';></textarea>"+
+            "<button  style='margin: 10px; white-space: nowrap;' onclick='storeReply(this,"+id+")' type='submit' class='btn btn-primary'>Reply</button>";
+        for(let i=0;i<result['replies']['data'].length;i++) {
+            let divElem=document.createElement('div');
+            divElem.setAttribute('style','background: rgba(253,253,253,0.58);margin-left:20px;');
+            let nameDiv=document.createElement('div');
+            let nameBold=document.createElement('b');
+            nameBold.innerText=result['replies']['data'][i]['name'];
+            nameDiv.appendChild(nameBold);
+            let replyDiv=document.createElement('div')
+            replyDiv.innerHTML="<p>"+result['replies']['data'][i]['body']+"</p>";
+            divElem.appendChild(nameDiv);
+            divElem.appendChild(replyDiv);
+            parent.appendChild(divElem);
+            if(result['replies']['next_page_url']!=null) {
+                let next_load = document.createElement("a");
+                next_load.setAttribute('id', "next_reply");
+                next_load.setAttribute('onclick', 'loadMoreReplies(\'' + result['replies']['next_page_url']+ '\','+id+',this)');
+                next_load.setAttribute('style', 'color:#1d68a7;cursor:pointer;margin-right:15px;');
+                next_load.innerText = "View More Replies";
+                parent.appendChild(next_load)
+            }
+            if(result['replies']['prev_page_url']!=null) {
+                let prev_load = document.createElement("a");
+                prev_load.setAttribute('id', "prev_reply");
+                prev_load.setAttribute('onclick', 'loadMoreReplies(\'' + result['replies']['prev_page_url']+ '\','+id+',this)');
+                prev_load.setAttribute('style', 'color:#1d68a7;cursor:pointer;');
+                prev_load.innerText = "View Previous Replies";
+                parent.appendChild(prev_load)
+            }
+        }
+    }
+
 </script>
+
 
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <!-- 	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script> -->
@@ -758,7 +782,4 @@
         crossorigin="anonymous"></script>
 </body>
 </html>
-
-{{--<i class="fas fa-lock-open"></i>--}}
-{{--<i class="fas fa-lock"></i>--}}
 

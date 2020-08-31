@@ -48,8 +48,10 @@ Route::group([
     'middleware' => 'auth:api',
     'prefix'=>"api",
 ],function () {
+    Route::get('/test', 'GitblogApiResponseController@test');
     Route::get('/get/info/{postId}', 'GitblogApiResponseController@getInfo');
     Route::get('/get/comments/{postId}', 'GitblogApiResponseController@readComments');
+    Route::get('/get/reply/{comment_id}', 'GitblogApiResponseController@readReplies');
     Route::post('/post/info/vote', 'GitblogApiResponseController@postVoteResponse');
     Route::post('/post/info/edit', 'GitblogApiResponseController@postEditResponse');
     Route::post('/post/vote', 'GitblogApiResponseController@voteOriginalArticle');
