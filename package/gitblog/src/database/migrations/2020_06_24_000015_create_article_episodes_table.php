@@ -16,12 +16,15 @@ class CreateArticleEpisodesTable extends Migration
         Schema::create('article_episodes', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('post_id')->unsigned();
+            $table->bigInteger('episode_post_id')->unsigned();
             $table->string('state');
             $table->timestamps();
         });
         Schema::table('article_episodes', function(Blueprint $table){
             $table->foreign('post_id')->references('id')->on('posts')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('episode_post_id')->references('id')->on('posts')->onDelete('cascade')->onUpdate('cascade');
         });
+
     }
 
     /**

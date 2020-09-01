@@ -2,6 +2,7 @@
 namespace Onu\Gitblog\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use Onu\Gitblog\Models\ArticleEpisode;
 use Onu\Gitblog\Models\Post;
 use Onu\Gitblog\Models\PrimaryContribution;
 
@@ -18,8 +19,9 @@ class GitblogHomeController extends Controller
         $post = Post::where('slug', $slug)->firstOrFail();
         $user= auth()->user();
         $token =auth('api')->login($user);
+        $episodes=ArticleEpisode::where('post_id',$post->id)->where('state','ACCEPTED')->get();
 
-        return view('Gitblog::showArticle',['post'=>$post,'token'=>$token]);
+        return view('Gitblog::showArticle',['episodes'=>$episodes,'post'=>$post,'token'=>$token]);
     }
     public function editPost($slug){
         $post = Post::where('slug', $slug)->firstOrFail();

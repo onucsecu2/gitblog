@@ -12,6 +12,7 @@ Route::group([
     Route::get('/post/details/{slug}', 'GitblogHomeController@readDetails'); //
     Route::get('/post/details/{slug}/edit', 'GitblogHomeController@editPost'); // show the suggested edits of the post --not completed--
     Route::get('/create','GitblogPostsController@createStory');// creating a new post
+    Route::get('/addEpisode/{post_id}','GitblogPostsController@createEpisode');// adding an episodes
     Route::post('/post','GitblogPostsController@post'); // send the post to db
 
 

@@ -58,7 +58,7 @@
 </head>
 <body>
 <div style="text-align: center;"><h1>GitBlog</h1></div>
-<div class="row">
+<div class="row mx-md-n1">
     <div class="col-md-2 center">
         <div class="position-fixed">
             <div class="card border-0">
@@ -133,7 +133,7 @@
                         <li style="list-style-type: none;">
                             <button id="fork" onclick="window.location='{{ url('primary/pull/all/'. $post->id)}}'"
                                     class="btn btn-light" data-placement="top" data-toggle="tooltip"
-                                    title="Turn on notification for this story" type="button">
+                                    title="Pull to contribute your ideas" type="button">
                                 <i class="fa fa-code-fork" aria-hidden="true"></i>
                             </button>
 
@@ -145,7 +145,8 @@
                             </button>
                         </li>
                         <li style="list-style-type: none;">
-                            <button type="button" class="btn btn-light" data-toggle="tooltip" data-placement="top"
+                            <button type="button" onclick="window.location='{{url('/addEpisode/'.$post->id)}}'"
+                                    class="btn btn-light" data-toggle="tooltip" data-placement="top"
                                     title="Add a episode of this story">
                                 <i class="fa fa-plus-square" aria-hidden="true"></i>
                             </button>
@@ -204,7 +205,22 @@
             </div>
         </div>
     </div>
-
+    <div class="col-md-2 center">
+        <div>
+            @if(count($episodes)>0)
+            <div class="card border-1">
+                <div class="card-body">
+                    <b class="card-title">Episodes</b>
+                    <ul>
+                    @foreach($episodes as $episode)
+                        <li onclick="window.location='{{ url('/post/details/'. $episode->episode_post->slug)}}'" style="list-style-type: none;cursor: pointer;"　>{{$episode->episode_post->title}}</li>
+                    @endforeach
+                    </ul>
+                </div>
+            </div>
+            @endif
+        </div>
+    </div>
 </div>
 <!-- Optional JavaScript -->
 <script type="text/javascript">
